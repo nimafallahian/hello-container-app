@@ -34,7 +34,7 @@ class OrderPaymentIntegrationTest extends TestCase
                 return $notification->order->id === $order->id &&
                        $notification->order->contract_number === 'TEST-CONTRACT-001' &&
                        $notification->order->bl_number === 'TEST-BL-001' &&
-                       $notifiable->routes['mail'] === 'test@example.com' &&
+                       $notifiable->routes['mail'] === 'nima.fallahian@gmail.com' &&
                        in_array('mail', $channels) &&
                        $notification->delay === null;
             }
@@ -63,7 +63,7 @@ class OrderPaymentIntegrationTest extends TestCase
                 $actualDelay = $notification->delay ? Carbon::now()->diffInSeconds($notification->delay) : 0;
                 
                 return $notification->order->id === $order->id &&
-                       $notifiable->routes['mail'] === 'test@example.com' &&
+                       $notifiable->routes['mail'] === 'nima.fallahian@gmail.com' &&
                        abs($actualDelay - $expectedDelay) < 5;
             }
         );

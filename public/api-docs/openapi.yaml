@@ -1,0 +1,272 @@
+openapi: 3.0.0
+info:
+  title: Logistics Orders API
+  description: API for managing logistics orders with payment notifications
+  version: 1.0.0
+  contact:
+    name: Nima Fallahian Sichani
+    email: nima.fallahian@gmail.com
+
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local development server
+
+paths:
+  /orders:
+    get:
+      summary: List unprocessed orders
+      description: Returns a list of orders where bl_release_date is null and freight_payer_self is false
+      operationId: listOrders
+      tags:
+        - Orders
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        example: 10
+    
+    post:
+      summary: Create a new order
+      description: Creates a new order in the system
+      operationId: createOrder
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderInput'
+      responses:
+        '201':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Order created successfully
+                  data:
+                    $ref: '#/components/schemas/Order'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+  
+  /orders/{orderId}:
+    get:
+      summary: Get order by ID
+      description: Returns a single order
+      operationId: getOrder
+      tags:
+        - Orders
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The order ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Order'
+        '404':
+          description: Order not found
+    
+    put:
+      summary: Update an order
+      description: Updates an existing order. Will trigger payment notification if freight_payer_self changes to false.
+      operationId: updateOrder
+      tags:
+        - Orders
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The order ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderUpdateInput'
+      responses:
+        '200':
+          description: Order updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Order updated successfully
+                  data:
+                    $ref: '#/components/schemas/Order'
+        '404':
+          description: Order not found
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+    
+    delete:
+      summary: Delete an order
+      description: Deletes an order from the system
+      operationId: deleteOrder
+      tags:
+        - Orders
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The order ID
+      responses:
+        '200':
+          description: Order deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Order deleted successfully
+        '404':
+          description: Order not found
+
+components:
+  schemas:
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        contract_number:
+          type: string
+          example: CTR-2024-001
+        bl_number:
+          type: string
+          example: BL-123456
+        freight_payer_self:
+          type: boolean
+          example: false
+          description: If false, payment notification will be sent when changed from true
+        bl_release_date:
+          type: string
+          format: date-time
+          nullable: true
+          example: 2024-01-15T10:00:00Z
+        bl_release_user_id:
+          type: integer
+          nullable: true
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: 2024-01-10T08:00:00Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2024-01-10T08:00:00Z
+    
+    OrderInput:
+      type: object
+      required:
+        - contract_number
+        - bl_number
+        - freight_payer_self
+      properties:
+        contract_number:
+          type: string
+          example: CTR-2024-001
+          maxLength: 255
+        bl_number:
+          type: string
+          example: BL-123456
+          maxLength: 255
+        freight_payer_self:
+          type: boolean
+          example: false
+        bl_release_date:
+          type: string
+          format: date-time
+          nullable: true
+          example: 2024-01-15T10:00:00Z
+        bl_release_user_id:
+          type: integer
+          nullable: true
+          example: 1
+    
+    OrderUpdateInput:
+      type: object
+      properties:
+        contract_number:
+          type: string
+          example: CTR-2024-001
+          maxLength: 255
+        bl_number:
+          type: string
+          example: BL-123456
+          maxLength: 255
+        freight_payer_self:
+          type: boolean
+          example: false
+        bl_release_date:
+          type: string
+          format: date-time
+          nullable: true
+          example: 2024-01-15T10:00:00Z
+        bl_release_user_id:
+          type: integer
+          nullable: true
+          example: 1
+    
+    ValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: The given data was invalid.
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            contract_number:
+              - The contract number field is required.
+            bl_number:
+              - The bl number field is required. 

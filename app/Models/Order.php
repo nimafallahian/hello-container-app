@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Events\OrderPaymentRequired;
+use App\Actions\Orders\InitiateBlRelease;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,11 +31,7 @@ class Order extends Model
     protected static function booted()
     {
         static::saved(function (Order $order) {
-            if ($order->wasChanged('freight_payer_self') && 
-                $order->freight_payer_self === false &&
-                $order->getOriginal('freight_payer_self') === true) {
-                OrderPaymentRequired::dispatch($order);
-            }
+            (new InitiateBlRelease)->execute($order);
         });
     }
 }

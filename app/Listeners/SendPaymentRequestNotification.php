@@ -21,7 +21,7 @@ class SendPaymentRequestNotification
         $delay = $this->calculateDelayForOfficeHours();
         
         $recipient = new \Illuminate\Notifications\AnonymousNotifiable;
-        $recipient->route('mail', 'test@example.com');
+        $recipient->route('mail', 'nima.fallahian@gmail.com');
         
         $notification = new PaymentRequest($event->order);
         

@@ -32,7 +32,7 @@ class SendPaymentRequestNotificationTest extends TestCase
             PaymentRequest::class,
             function ($notification, $channels, $notifiable) use ($order) {
                 return $notification->order->id === $order->id &&
-                       $notifiable->routes['mail'] === 'test@example.com' &&
+                       $notifiable->routes['mail'] === 'nima.fallahian@gmail.com' &&
                        $notification->delay === null;
             }
         );
@@ -60,7 +60,7 @@ class SendPaymentRequestNotificationTest extends TestCase
             function ($notification, $channels, $notifiable) use ($order, $expectedDelay) {
                 $actualDelay = $notification->delay ? Carbon::now()->diffInSeconds($notification->delay) : 0;
                 return $notification->order->id === $order->id &&
-                       $notifiable->routes['mail'] === 'test@example.com' &&
+                       $notifiable->routes['mail'] === 'nima.fallahian@gmail.com' &&
                        abs($actualDelay - $expectedDelay) < 5;
             }
         );
@@ -88,7 +88,7 @@ class SendPaymentRequestNotificationTest extends TestCase
             function ($notification, $channels, $notifiable) use ($order, $expectedDelay) {
                 $actualDelay = $notification->delay ? Carbon::now()->diffInSeconds($notification->delay) : 0;
                 return $notification->order->id === $order->id &&
-                       $notifiable->routes['mail'] === 'test@example.com' &&
+                       $notifiable->routes['mail'] === 'nima.fallahian@gmail.com' &&
                        abs($actualDelay - $expectedDelay) < 5;
             }
         );
@@ -116,7 +116,7 @@ class SendPaymentRequestNotificationTest extends TestCase
             function ($notification, $channels, $notifiable) use ($order, $expectedDelay) {
                 $actualDelay = $notification->delay ? Carbon::now()->diffInSeconds($notification->delay) : 0;
                 return $notification->order->id === $order->id &&
-                       $notifiable->routes['mail'] === 'test@example.com' &&
+                       $notifiable->routes['mail'] === 'nima.fallahian@gmail.com' &&
                        abs($actualDelay - $expectedDelay) < 5;
             }
         );
@@ -144,7 +144,7 @@ class SendPaymentRequestNotificationTest extends TestCase
             function ($notification, $channels, $notifiable) use ($order, $expectedDelay) {
                 $actualDelay = $notification->delay ? Carbon::now()->diffInSeconds($notification->delay) : 0;
                 return $notification->order->id === $order->id &&
-                       $notifiable->routes['mail'] === 'test@example.com' &&
+                       $notifiable->routes['mail'] === 'nima.fallahian@gmail.com' &&
                        abs($actualDelay - $expectedDelay) < 5;
             }
         );
