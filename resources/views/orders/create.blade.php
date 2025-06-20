@@ -56,6 +56,10 @@
 <body>
     <h1>Create Order</h1>
     
+    <div style="margin-bottom: 20px;">
+        <a href="{{ route('orders.index') }}" style="color: #007bff; text-decoration: none;">← View Unprocessed Orders</a>
+    </div>
+    
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
