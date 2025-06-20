@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Database\QueryException;
 use Tests\TestCase;
 
 class OrderTest extends TestCase
@@ -70,5 +71,47 @@ class OrderTest extends TestCase
         
         $this->assertNotNull($order->contract_number);
         $this->assertNotNull($order->bl_number);
+    }
+    
+    public function test_cannot_create_order_without_required_fields(): void
+    {
+        $this->expectException(QueryException::class);
+        
+        Order::create([
+            'freight_payer_self' => true,
+        ]);
+    }
+    
+    public function test_cannot_create_order_with_invalid_user_id(): void
+    {
+        $this->expectException(QueryException::class);
+        
+        Order::create([
+            'contract_number' => 'CTR-2024-003',
+            'bl_number' => 'BL-789012',
+            'freight_payer_self' => true,
+            'bl_release_user_id' => 99999,
+        ]);
+    }
+    
+    public function test_boolean_cast_works_correctly(): void
+    {
+        $order = Order::create([
+            'contract_number' => 'CTR-2024-004',
+            'bl_number' => 'BL-345678',
+            'freight_payer_self' => 1,
+        ]);
+        
+        $this->assertTrue($order->freight_payer_self);
+        $this->assertIsBool($order->freight_payer_self);
+        
+        $order2 = Order::create([
+            'contract_number' => 'CTR-2024-005',
+            'bl_number' => 'BL-901234',
+            'freight_payer_self' => 0,
+        ]);
+        
+        $this->assertFalse($order2->freight_payer_self);
+        $this->assertIsBool($order2->freight_payer_self);
     }
 }
