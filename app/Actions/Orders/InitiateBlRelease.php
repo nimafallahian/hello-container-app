@@ -9,10 +9,10 @@ class InitiateBlRelease
 {
     public function execute(Order $order): void
     {
-        if ($order->wasChanged('freight_payer_self') && 
+        if ($order->wasChanged('freight_payer_self') &&
             $order->freight_payer_self === false &&
             $order->getOriginal('freight_payer_self') === true) {
             OrderPaymentRequired::dispatch($order);
         }
     }
-} 
+}

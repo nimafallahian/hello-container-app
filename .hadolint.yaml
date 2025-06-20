@@ -1,0 +1,7 @@
+ignored:
+  # Pin versions in apt get install - we're ignoring this for development
+  - DL3008
+trustedRegistries:
+  - docker.io
+  - gcr.io
+  - ghcr.io

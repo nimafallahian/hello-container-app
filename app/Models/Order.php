@@ -9,14 +9,14 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = [];
-    
+
     protected $casts = [
         'freight_payer_self' => 'boolean',
         'bl_release_date' => 'datetime',
     ];
-    
+
     public static function validationRules(): array
     {
         return [
@@ -27,7 +27,7 @@ class Order extends Model
             'bl_number' => 'required|string|max:255',
         ];
     }
-    
+
     protected static function booted()
     {
         static::saved(function (Order $order) {

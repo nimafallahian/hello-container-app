@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('contract_number');
             $table->string('bl_number');
             $table->timestamps();
-            
+
             $table->foreign('bl_release_user_id')->references('id')->on('users')->onDelete('set null');
         });
     }
